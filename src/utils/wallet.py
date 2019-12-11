@@ -1,5 +1,5 @@
 from src.utils.market_rules import MarketRules
-from src.utils.my_warning import warning
+from src.utils.my_warning import my_warning
 
 class Wallet:
     def __init__(self, initial_nb_eur, spare_proportion=0.5):
@@ -12,25 +12,26 @@ class Wallet:
 
     def buy_xbt(self, amount_of_eur, conversion_rate):
         if amount_of_eur > self.my_nb_eur_to_use:
-            warning("Not enough money.")
+            my_warning("Not enough money.")
             return 0.0
         else:
             nb_xbt = self.market_rules.how_much_xbt_after_tax_for(amount_of_eur, conversion_rate)
             if nb_xbt < self.market_rules.minimum_xbt_to_trade:
-                warning("Impossible to buy less than the minimum amount of XBT.")
+                my_warning("Impossible to buy less than the minimum amount of XBT.")
                 return 0.0
             else:
-                fee = amount_of_eur * self.market_rules.taker_fees_proportion_buy
-                # amount_of_eur_to_convert = amount_of_eur - fee
                 self.my_nb_eur_to_use -= amount_of_eur
-                # got_nb_xbt = amount_of_eur_to_convert * conversion_rate
-                # self.my_nb_xbt += nb_xbt
-                return got_nb_xbt
+                fee = amount_of_eur * self.market_rules.taker_fees_proportion_buy
+                amount_of_eur_to_convert = amount_of_eur - fee
+                conversion_rate_1eur_to_xbt = 1.0 / conversion_rate
+                nb_xbt = amount_of_eur_to_convert * conversion_rate_1eur_to_xbt
+                self.my_nb_xbt += nb_xbt
+                return nb_xbt
 
     # This function is only called when there is a gain, else we wait.
     def sell_xbt(self, amount_of_xbt, conversion_rate, invested_nb_eur):
         if amount_of_xbt < self.market_rules.minimum_xbt_to_trade:
-            warning("Impossible to sell less than the minimum amount of XBT.")
+            my_warning("Impossible to sell less than the minimum amount of XBT.")
             return 0.0
         else:
             nb_eur = self.market_rules.how_much_eur_after_tax_for(amount_of_xbt, conversion_rate)

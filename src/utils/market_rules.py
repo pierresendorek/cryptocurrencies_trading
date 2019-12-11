@@ -1,3 +1,5 @@
+from src.utils.my_warning import my_warning
+
 
 class MarketRules:
     """
@@ -21,8 +23,10 @@ class MarketRules:
         conversion_rate_1eur_to_xbt = 1.0 / conversion_rate_1xbt_to_eur
         amount_of_xbt = amount_of_eur_to_convert * conversion_rate_1eur_to_xbt
         if amount_of_xbt < self.minimum_xbt_to_trade:
-            raise ValueError("Too small amount of eur : ", amount_of_eur)
-        return amount_of_xbt
+            my_warning("Impossible to buy less than the minimum amount of XBT.")
+            return 0.0
+        else:
+            return amount_of_xbt
 
     def how_much_eur_after_tax_for(self, amount_of_xbt, conversion_rate_1xbt_to_eur):
         amount_of_eur = amount_of_xbt * conversion_rate_1xbt_to_eur
