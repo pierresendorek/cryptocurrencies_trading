@@ -20,4 +20,6 @@ Le traîtement en Python est assez lent.
     * Il n'y a pas de bons outils de refactoring aujourd'hui.
 * *Cython* : semble être un bon compromis
     * Dispense d'avoir à tout recoder from scratch
-    
+    * Bugs avec Jupyter
+    * Demande une seconde passe de compilation, ce qui néecessite de la configuration
+* *Numba* : meilleur choix à ce jour.

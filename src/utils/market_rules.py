@@ -14,7 +14,7 @@ class MarketRules:
         self.taker_fees_proportion_sell = 0.26 / 100
         self.minimum_xbt_to_trade = 0.002
 
-    def get_minimal_amount_of_eur(self, conversion_rate_1xbt_to_eur):
+    def get_minimal_amount_of_eur(self, conversion_rate_1xbt_to_eur:float):
         return self.minimum_xbt_to_trade * conversion_rate_1xbt_to_eur / (1 - self.taker_fees_proportion_buy)
 
     def how_much_xbt_after_tax_for(self, amount_of_eur, conversion_rate_1xbt_to_eur):
@@ -28,12 +28,12 @@ class MarketRules:
         else:
             return amount_of_xbt
 
-    def how_much_eur_after_tax_for(self, amount_of_xbt, conversion_rate_1xbt_to_eur):
+    def how_much_eur_after_tax_for(self, amount_of_xbt:float, conversion_rate_1xbt_to_eur:float):
         amount_of_eur = amount_of_xbt * conversion_rate_1xbt_to_eur
         fee = amount_of_eur * self.taker_fees_proportion_sell
         return amount_of_eur - fee
 
-    def what_would_be_the_gain_if_i_sold(self, amount_of_xbt, conversion_rate, given_that_i_invested_nb_eur):
+    def what_would_be_the_gain_if_i_sold(self, amount_of_xbt:float, conversion_rate:float, given_that_i_invested_nb_eur:float):
         gain = self.how_much_eur_after_tax_for(amount_of_xbt, conversion_rate) - given_that_i_invested_nb_eur
         return gain
 

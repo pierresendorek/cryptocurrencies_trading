@@ -4,7 +4,7 @@ from time import time
 overtime_execution_list = []
 monitoring_dict = {}
 
-# wrapper
+# decorator
 def monitor_execution_time_stats(time_over_which_execution_is_logged):
     def monitor_execution_time_stats_(func):
         def wrapper(*args, **kwargs):

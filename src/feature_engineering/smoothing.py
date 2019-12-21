@@ -68,7 +68,6 @@ class MultipleExponentialSmoother:
         return "MultipleExponentialSmoother(" + str(self.time_to_divide_by_e_array) +")"
 
 
-
 if __name__ == "__main__":
     ms = MultipleExponentialSmoother([1,2,4,8])
     print(ms.get_next(1.0, 1.0))

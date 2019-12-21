@@ -31,19 +31,17 @@ class FeatureEngineeringWithMarket:
             self._add_conversion_rate_buy(df, amount_eur=20)
 
             amount_eur = 100
-            conversion_rate_approx = 8000
+            conversion_rate_approx = 5000
             self._add_conversion_rate_sell(df, amount_xbt=amount_eur / conversion_rate_approx)
             pickle.dump(df, gzip.open(join(self.config.data_path, "removable", "df_conversion_rates.pickle.gzip"), "wb"))
         else:
             df = pickle.load(gzip.open(join(self.config.data_path, "removable", "df_conversion_rates_no_market.pickle.gzip"), "rb"))
-
+            #df = df.iloc[:100]
             self._add_smooth_conversion_rate(df, "sell")
             self._add_smooth_conversion_rate(df, "buy")
-            self._add_rolling_max_anticausal_on_buy(df, timedelta(hours=1))
-
-            print(list(df.columns))
-
-
+            self._add_rolling_max_anticausal_on_buy(df, timedelta(hours=1), column_name="max_during_the_next_hour")
+            self._add_rolling_max_anticausal_on_buy(df, timedelta(seconds=60), column_name="max_during_the_next_minute")
+            pickle.dump(df, gzip.open(join(self.config.data_path, "removable", "df_conversion_rates_smoothings_and_rolling_max.pickle.gzip"), 'wb'))
 
     @print_execution_time
     def _add_market_contents(self, df):
@@ -70,20 +68,16 @@ class FeatureEngineeringWithMarket:
             time = df["time"].array[i_row]
             list_of_smoothed_values.append(smoother.get_next(col.array[i_row], (time - previous_time).total_seconds()))
             previous_time = time
-
         df["conversion_rate_" + sell_or_buy + "_smoothed"] = list_of_smoothed_values
 
     @print_execution_time
-    def _add_rolling_max_anticausal_on_buy(self, df, time_horizon:timedelta):
+    def _add_rolling_max_anticausal_on_buy(self, df, time_horizon:timedelta, column_name):
         rolling_max_anticausal = RollingMaxAnticausal(win_len=time_horizon)
         L = []
         for i_row in range(len(df) - 1, -1, -1):
             row = df.iloc[i_row]
             L.insert(0, rolling_max_anticausal.get_next(row["time"], row["conversion_rate_buy"]))
-
-
-
-
+        df[column_name] = L
 
     @print_execution_time
     def _add_conversion_rate_buy(self, df, amount_eur):
@@ -100,8 +94,6 @@ class FeatureEngineeringWithMarket:
             conversion_rate = amount_xbt / how_much_equivalent_euro_can_i_get(row["current_sells"], total_amount_xbt=amount_xbt)
             conversion_rates_sell.append(conversion_rate)
         df["conversion_rate_sell"] = conversion_rates_sell
-
-
 
     def _load_data(self):
         data_path = self.path_df_all_trades
