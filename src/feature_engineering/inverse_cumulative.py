@@ -50,7 +50,7 @@ def how_much_equivalent_xbt_can_i_get(xbt2eur_histogram:SortedDict, total_amount
 
 
 
-
+# usage example
 if __name__ == "__main__":
     d = SortedDict({8000: 0.001, 8100: 0.01, 8200:0.01})
 

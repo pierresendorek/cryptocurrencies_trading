@@ -1,5 +1,7 @@
 import datetime
 
+# Datum is the singular of Data
+
 class DatumFormatter:
     def __init__(self):
         pass
@@ -57,6 +59,8 @@ class DatumFormatter:
         return d
 
 
+
+# usage example :
 if __name__ == "__main__":
     from pprint import pprint
 

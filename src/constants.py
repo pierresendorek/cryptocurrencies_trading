@@ -28,3 +28,4 @@ class Constants:
 
 if __name__ == "__main__":
     c = Constants(ConfigProject())
+    print(c.load_supported_pair_list(ConfigProject()))

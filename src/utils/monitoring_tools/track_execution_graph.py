@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.monitoring_tools.time_execution import time_execution
+from src.utils.monitoring_tools import time_execution
 
 
 class Node:

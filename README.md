@@ -1,25 +1,32 @@
 # Cryptocurrencies trading
 
+## Structure of the project
+This project is structured as follows. 
+* `notebooks` contains [Jupyter Notebooks](https://jupyter.org/). Those are useful to explore the data efficiently.
+* `shell_scripts` contains scripts whose purpose is to automate the deployment and run the source code on a remote machine.
+* `src` contains the source code.
+    * `feature engineering` : all the preprocessing to extract attributes of the data from which the prediction will be made.
+    * `strategies` : contains algorithms for automatic trading.
+    * `utils` contains some common elementary algorithms useful for this project. Among others, the `market_rules` which simulates the fees applied to the trading actions, and `wallet` which tracks the amount of currencies (crypto of fiat) left in the user's wallet.
+    * `download_big_data.py` is a script that downloads all the data from the trades made on Kraken.   
 
-# TODO
-### Faire un modèle de marché plus proche de la réalité. 
-* *Done* : Notamment, les buying fees et les selling fees peuvent être différents.
-* *Done* : Baser l'algorithme sur les prix de vente et les prix d'achat, non pas seulement les prix d'achat.
-* *WiP* : Faire un modèle de marché dans lequel on puisse évaluer à tout instant combien de XBT on peut acheter pour une quantité fixe d'EUR.
+## TODO (General)
 
-### Changement de langage de programmation
-Le traîtement en Python est assez lent.
+* Make features which reflect the market model closer to reality.
+    * *WiP* Build an approximative cumulative histogram from the data.
+    * *Done* : Base algorithms on the selling price to decide whether to buy or not.
+    * *WiP* Make the computation of the features recursive, in particular : the market state and the smoothings. 
 
-* *Scala* : intéressant pour faire le feature engineering mais après
-    * Si la partie Modèle est prise en charge par Python, fournir les résultats à Python en temps réel ?
-    * Si le modèle de machine learning est en Scala, lequel choisir sachant qu'il n'y a pas beaucoup de libs.
-* *Kotlin* : langage intéressant à apprendre en soi, mais idem : comment faire les modèles de machine learning ?
-    * TensorFlow semble avoir une API proche de celle des versions < 1.4
-* *Julia* : contient tout ce qu'il faut en termes de bibliothèques, mais :
-    * Le développement est lent car la stacktrace est difficile à comprendre.
-    * Il n'y a pas de bons outils de refactoring aujourd'hui.
-* *Cython* : semble être un bon compromis
-    * Dispense d'avoir à tout recoder from scratch
-    * Bugs avec Jupyter
-    * Demande une seconde passe de compilation, ce qui néecessite de la configuration
-* *Numba* : meilleur choix à ce jour.
+## TODO (Data Science)
+
+* What is the daily volume traded on the market ?
+* What kind of actors are playing on this market ?
+* Is there a correlation with the values of CAC40, S&P500 or other european indicators ?
+* Visualize the data, with dimension reduction methods for instance.
+* What is the average volatility ?
+* Scrap Twitter data and other social media, like Reddit.
+* Scrap data from specialized press.
+* Measure daily tendencies.
+* Modelize what would give multiple deals at once, e.g. EUR -> XBT -> ETH -> XBT -> EUR
+* See how markets communicate. Maybe Kraken is not the only interesting market.
+* See the strategy of big actors : the big actors have probably interesting information.
