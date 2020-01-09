@@ -8,7 +8,6 @@ class MarketContents:
         self.current_buys = SortedDict()
         self.nb_items_to_keep = nb_items_to_keep
 
-
     def update_contents(self, row):
         if row["sell_buy"] == "s":
             self._add_to_distibution(self.current_sells, row["conversion_rate"], row["amount"])

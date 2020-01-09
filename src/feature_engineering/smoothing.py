@@ -36,6 +36,7 @@ class RollingMaxAnticausal:
 
 class ExponentialSmoother:
     def __init__(self, time_to_divide_by_e):
+
         self.num = 0.0
         self.den = 0.0
         self.time_to_divide_by_e = time_to_divide_by_e  # seconds
