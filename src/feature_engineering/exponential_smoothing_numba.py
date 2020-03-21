@@ -8,7 +8,9 @@ from time import time
 # TODO : put into a class to hide the internal variables
 # TODO : make recursive
 @njit
-def _exponential_smooth_array(x, delta_t, times_to_divide_by_e):
+def _exponential_smooth_array(x:np.ndarray,
+                              delta_t:np.ndarray,
+                              times_to_divide_by_e:np.ndarray):
     y = np.zeros((x.shape[0], times_to_divide_by_e.shape[0]))
     y_prev = 0.0
     for i_smoother in range(times_to_divide_by_e.shape[0]):
@@ -21,7 +23,7 @@ def _exponential_smooth_array(x, delta_t, times_to_divide_by_e):
 
 
 @njit
-def _exponential_smooth_ones(delta_t, times_to_divide_by_e):
+def _exponential_smooth_ones(delta_t:np.ndarray, times_to_divide_by_e:np.ndarray):
     y = np.zeros((delta_t.shape[0], times_to_divide_by_e.shape[0]))
     y_prev = 0.0
     for i_smoother in range(times_to_divide_by_e.shape[0]):
@@ -34,7 +36,7 @@ def _exponential_smooth_ones(delta_t, times_to_divide_by_e):
 
 
 @njit
-def _smooth_array(x, delta_t, times_to_divide_by_e):
+def _smooth_array(x:np.ndarray, delta_t:np.ndarray, times_to_divide_by_e:np.ndarray):
     y, y_prec = _exponential_smooth_array(x, delta_t, times_to_divide_by_e)
     o, o_prec = _exponential_smooth_ones(delta_t, times_to_divide_by_e)
     return y/o, (y_prec, o_prec)

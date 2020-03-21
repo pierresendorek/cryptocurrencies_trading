@@ -6,7 +6,7 @@ from numba.typed import List
 
 
 @jit
-def rolling_max(x, pos, win_len):
+def rolling_max(x:np.ndarray, pos:np.ndarray, win_len:float):
     # is already anticausal
     r_m = np.zeros_like(x)
     position_value_list = List()

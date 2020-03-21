@@ -7,7 +7,6 @@ from src.feature_engineering.inverse_cumulative import how_much_equivalent_xbt_c
     how_much_equivalent_euro_can_i_get
 from src.feature_engineering.market_contents import MarketContents
 from src.feature_engineering.smoothing import MultipleExponentialSmoother, exponential_range, RollingMaxAnticausal
-from src.utils.monitoring_tools import print_execution_time
 from src.utils.market_rules import MarketRules
 from datetime import timedelta
 from os.path import join

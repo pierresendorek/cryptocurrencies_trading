@@ -1,6 +1,22 @@
 import numpy as np
 from typing import Tuple, List
+from numba import jitclass
+from numba import int32, float32
 
+
+content_spec = [('conversion_rate', float32),
+                ('amount', float32)]
+@jitclass(content_spec)
+class Content:
+    def __init__(self, conversion_rate=-1.0, amount=-1.0):
+        self.conversion_rate = conversion_rate
+        self.amount = amount
+
+
+cell_spec = [('content', Content),
+             ('index_prev', int32),
+             ('index_next', int32)]
+@jitclass(cell_spec)
 class Cell:
     def __init__(self, content):
         self.content = content
@@ -10,32 +26,22 @@ class Cell:
         self.index_prev = -1
         self.index_next = -1
 
-
 class Deque:
     def __init__(self, size:int):
-        self.memory_block: Tuple[Cell] = tuple([Cell(None) for _ in range(size)])
-        self.free_indexes: List[int] = list(range(size))
+        self.memory_block : Tuple[Cell] = tuple([Cell(None) for _ in range(size)])
+        self.free_indexes : List[int] = list(range(size))
         self.last_deque_cell_index = -1 # way to initialize to None
         self.first_deque_cell_index = -1 # way to initialize to None
         self.nb_items = 0
 
-
     def append(self, content):
         if len(self.free_indexes) > 0:
             free_index = self.free_indexes.pop(0)
+
             if self.nb_items == 0:
                 self.last_deque_cell_index = self.first_deque_cell_index = free_index
                 self.memory_block[free_index].content = content
                 self.nb_items = 1
-                return free_index
-
-            # elif self.nb_items == 1:
-            #     cell_curr_index = free_index
-            #     cell_curr = self.memory_block[cell_curr_index]
-            #     cell_curr.content = content
-            #     cell_prev = self.memory_block[self.last_deque_cell_index]
-            #     cell_curr.index_prev = self.last_deque_cell_index
-            #     self.nb_items += 1
 
             elif self.nb_items >= 1:
                 cell_curr_index = free_index
@@ -45,14 +51,11 @@ class Deque:
                 cell_prev = self.memory_block[self.last_deque_cell_index]
                 cell_curr.index_prev = self.last_deque_cell_index
                 self.last_deque_cell_index = cell_curr_index
+
+
                 cell_prev.index_next = cell_curr_index
+
                 self.nb_items += 1
-                return free_index
-        else:
-            first_appended = self.pop_first_appended()
-            return self.append(content)
-
-
 
     def pop(self, index):
         if self.nb_items == 0:
@@ -77,6 +80,7 @@ class Deque:
         cell_at_index.reset()
         self.nb_items -= 1
         self.free_indexes.append(index)
+
         return cell_at_index.content
 
 
@@ -91,30 +95,10 @@ if __name__ == "__main__":
     d = Deque(size=10)
 
     print("--")
-    d.append("hello")
-    d.append("dog")
-    d.append("how")
-    d.append("are")
-    d.append("you")
+    d.append(Content(1.0))
+    d.append(Content(2.0))
+    d.append(Content(3.0))
 
-    while d.nb_items > 0:
-        print(d.pop_last_appended())
-
-    print("--")
-    d.append("my")
-    d.append("dog")
-    d.append("is")
-    d.append("in")
-    d.append("the")
-    d.append("house")
-
-
-    while d.nb_items > 0:
-        print(d.pop_last_appended())
-
-    print("--")
-    for i in range(20):
-        d.append(str(i))
 
     while d.nb_items > 0:
         print(d.pop_last_appended())
