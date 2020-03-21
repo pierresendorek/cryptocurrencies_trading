@@ -57,6 +57,8 @@ class Heap:
         last_element = self.h.pop(-1)
         root = self.h[0]
         self.h[0] = last_element
+        print("last element ", self.h[0])
+        self.bubble(0)
         return root
 
 
@@ -64,12 +66,14 @@ class Heap:
         parent_position = get_parent_position(position)
         # bubble_up if needed
         while (parent_position != -1) and self.should_x_be_child_of_y(parent_position, position):
+            print("bubbling up")
             self._exchange_values_at(parent_position, position)
             position = parent_position
             parent_position = get_parent_position(position)
 
         # bubble down if needed
         while(True):
+            print("bubbling down")
             pos_child_0, pos_child_1 = get_childs_positions(position)
             if pos_child_1 >= len(self.h):
                 if pos_child_0 >= len(self.h):
@@ -77,19 +81,27 @@ class Heap:
                 else:
                     if self.should_x_be_child_of_y(position, pos_child_0):
                         self._exchange_values_at(pos_child_0, position)
+                        position = pos_child_0
 
             else: # pos_child_0 and pos_child_1 are then valid positions in the tree
-                if not self.should_x_be_child_of_y(pos_child_0, pos_child_1):
-                    if self.should_x_be_child_of_y(position, pos_child_0):
+                if self.should_x_be_child_of_y(position, pos_child_0):
+                    if self.should_x_be_child_of_y(position, pos_child_1):
+                        if self.should_x_be_child_of_y(pos_child_0, pos_child_1):
+                            self._exchange_values_at(position, pos_child_1)
+                            position = pos_child_1
+                        else:
+                            self._exchange_values_at(position, pos_child_0)
+                            position = pos_child_0
+                    else:
                         self._exchange_values_at(position, pos_child_0)
                         position = pos_child_0
-                    else:
-                        break
-                else: # (self.get_value_at(pos_child_0) > self.get_value_at(pos_child_1))
-                    if self.should_x_be_child_of_y(position, pos_child_1):
-                       self._exchange_values_at(position, pos_child_1)
-                    else:
-                        break
+                elif self.should_x_be_child_of_y(position, pos_child_1):
+                    self._exchange_values_at(position, pos_child_1)
+                    position = pos_child_1
+                else:
+                    break
+
+
 
     def _get_value_at(self, position:int):
         return self.h[position]
@@ -117,7 +129,7 @@ class Heap:
             if child_position < len(self.h):
                 if not self.check_is_heap_structure(child_position):
                     return False
-                if self.h[child_position] < self.h[position]:
+                if not self.should_x_be_child_of_y(child_position, position):
                     return False
         return True
 
@@ -126,22 +138,29 @@ class Heap:
 
 if __name__ == "__main__":
 
-    heap = Heap("max_heap")
+    heap = Heap("min_heap")
 
     for i in range(10):
         heap.insert(np.random.rand())
 
-
-
     heap.h[2] = 0.0
 
+    print("--")
+    heap.print_subtree()
     print(heap.check_is_heap_structure())
 
-
-    heap.print_subtree()
 
     heap.bubble(2)
 
-    print(heap.check_is_heap_structure())
 
     heap.print_subtree()
+    print(heap.check_is_heap_structure())
+
+
+    cell = heap.pop_root()
+    print("popped root ", cell)
+
+    #print(cell)
+    print("--")
+    heap.print_subtree()
+    print(heap.check_is_heap_structure())
