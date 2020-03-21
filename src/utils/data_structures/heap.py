@@ -66,14 +66,12 @@ class Heap:
         parent_position = get_parent_position(position)
         # bubble_up if needed
         while (parent_position != -1) and self.should_x_be_child_of_y(parent_position, position):
-            print("bubbling up")
             self._exchange_values_at(parent_position, position)
             position = parent_position
             parent_position = get_parent_position(position)
 
         # bubble down if needed
         while(True):
-            print("bubbling down")
             pos_child_0, pos_child_1 = get_childs_positions(position)
             if pos_child_1 >= len(self.h):
                 if pos_child_0 >= len(self.h):
