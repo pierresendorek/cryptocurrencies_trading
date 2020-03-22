@@ -1,14 +1,6 @@
-import numpy as np
 from typing import Tuple, List
 
-class Cell:
-    def __init__(self, content):
-        self.content = content
-        self.reset()
-
-    def reset(self):
-        self.index_prev = -1
-        self.index_next = -1
+from src.utils.data_structures.cell import Cell
 
 
 class Deque:

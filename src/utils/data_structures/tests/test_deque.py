@@ -1,7 +1,7 @@
 import unittest
 
-from src.utils.data_structures.deque import Deque, Cell
-
+from src.utils.data_structures.deque import Deque
+from src.utils.data_structures.cell import Cell
 
 
 class TestHeap(unittest.TestCase):

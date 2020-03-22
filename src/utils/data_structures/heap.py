@@ -1,7 +1,114 @@
 import numpy as np
 from numba import njit, jit
 from time import time
-# TODO : handle the buffer overflow
+
+from src.utils.data_structures.cell import Cell
+
+
+class Heap:
+    def __init__(self, heap_type):
+        self.h = []
+        if heap_type == "min_heap":
+            self.should_x_be_child_of_y = lambda x, y: self._get_value_at(x) > self._get_value_at(y)
+        elif heap_type == "max_heap":
+            self.should_x_be_child_of_y = lambda x, y: self._get_value_at(x) < self._get_value_at(y)
+
+    def insert(self, x):
+        pos_x = len(self.h)
+        self.h.append(x)
+        pos_px = get_parent_position(pos_x)
+        while (pos_px != -1) and self.should_x_be_child_of_y(pos_px, pos_x):
+            self._exchange_cells_at(pos_px, pos_x)
+            pos_x = pos_px
+            pos_px = get_parent_position(pos_x)
+
+    def pop_root(self):
+        last_element = self.h.pop(-1)
+        root = self.h[0]
+        self.h[0] = last_element
+        self.bubble(0)
+        return root
+
+
+    def bubble(self, position:int):
+        parent_position = get_parent_position(position)
+        # bubble_up if needed
+        while (parent_position != -1) and self.should_x_be_child_of_y(parent_position, position):
+            self._exchange_cells_at(parent_position, position)
+            position = parent_position
+            parent_position = get_parent_position(position)
+
+        # bubble down if needed
+        while(True):
+            pos_child_0, pos_child_1 = get_childs_positions(position)
+            if pos_child_1 >= len(self.h):
+                if pos_child_0 >= len(self.h):
+                    break # no need to bubble down
+                else:
+                    if self.should_x_be_child_of_y(position, pos_child_0):
+                        self._exchange_cells_at(pos_child_0, position)
+                        position = pos_child_0
+
+            else: # pos_child_0 and pos_child_1 are then valid positions in the tree
+                if self.should_x_be_child_of_y(position, pos_child_0):
+                    if self.should_x_be_child_of_y(position, pos_child_1):
+                        if self.should_x_be_child_of_y(pos_child_0, pos_child_1):
+                            self._exchange_cells_at(position, pos_child_1)
+                            position = pos_child_1
+                        else:
+                            self._exchange_cells_at(position, pos_child_0)
+                            position = pos_child_0
+                    else:
+                        self._exchange_cells_at(position, pos_child_0)
+                        position = pos_child_0
+                elif self.should_x_be_child_of_y(position, pos_child_1):
+                    self._exchange_cells_at(position, pos_child_1)
+                    position = pos_child_1
+                else:
+                    break
+
+
+
+    def _get_value_at(self, position:int):
+        return self.h[position].get_value()
+
+    def _get_cell_at(self, position:int):
+        return self.h[position]
+
+    def _set_value_at(self, position:int, value):
+        self.h[position] = value
+
+    def _set_cell_at(self, position:int, cell):
+        self.h[position] = cell
+
+    def _exchange_values_at(self, position_0, position_1):
+        value_0, value_1 = self._get_value_at(position_0), self._get_value_at(position_1)
+        self._set_value_at(position_0, value_1)
+        self._set_value_at(position_1, value_0)
+
+    def _exchange_cells_at(self, position_0, position_1):
+        cell_0, cell_1 = self._get_cell_at(position_0), self._get_cell_at(position_1)
+        self._set_cell_at(position_0, cell_1)
+        self._set_cell_at(position_1, cell_0)
+
+    def print_subtree(self, position=0, offset=0):
+        u, d = get_childs_positions(position)
+        print(" " * offset * 4 + str(self.h[position]))
+        if u < len(self.h):
+            self.print_subtree(u, offset+1)
+        if d < len(self.h):
+            self.print_subtree(d, offset+1)
+
+    def check_is_heap_structure(self, position=0):
+        for child_position in get_childs_positions(position):
+            if child_position < len(self.h):
+                if not self.check_is_heap_structure(child_position):
+                    return False
+                if not self.should_x_be_child_of_y(child_position, position):
+                    return False
+        return True
+
+
 
 
 def decompose(position):
@@ -35,103 +142,6 @@ def get_childs_positions(position):
     return compose(b + '0'), compose(b + '1')
 
 
-class Heap:
-    # min heap
-    def __init__(self, heap_type):
-        self.h = []
-        if heap_type == "min_heap":
-            self.should_x_be_child_of_y = lambda x, y: self._get_value_at(x) > self._get_value_at(y)
-        elif heap_type == "max_heap":
-            self.should_x_be_child_of_y = lambda x, y: self._get_value_at(x) < self._get_value_at(y)
-
-    def insert(self, x):
-        pos_x = len(self.h)
-        self.h.append(x)
-        pos_px = get_parent_position(pos_x)
-        while (pos_px != -1) and self.should_x_be_child_of_y(pos_px, pos_x):
-            self._exchange_values_at(pos_px, pos_x)
-            pos_x = pos_px
-            pos_px = get_parent_position(pos_x)
-
-    def pop_root(self):
-        last_element = self.h.pop(-1)
-        root = self.h[0]
-        self.h[0] = last_element
-        print("last element ", self.h[0])
-        self.bubble(0)
-        return root
-
-
-    def bubble(self, position:int):
-        parent_position = get_parent_position(position)
-        # bubble_up if needed
-        while (parent_position != -1) and self.should_x_be_child_of_y(parent_position, position):
-            self._exchange_values_at(parent_position, position)
-            position = parent_position
-            parent_position = get_parent_position(position)
-
-        # bubble down if needed
-        while(True):
-            pos_child_0, pos_child_1 = get_childs_positions(position)
-            if pos_child_1 >= len(self.h):
-                if pos_child_0 >= len(self.h):
-                    break # no need to bubble down
-                else:
-                    if self.should_x_be_child_of_y(position, pos_child_0):
-                        self._exchange_values_at(pos_child_0, position)
-                        position = pos_child_0
-
-            else: # pos_child_0 and pos_child_1 are then valid positions in the tree
-                if self.should_x_be_child_of_y(position, pos_child_0):
-                    if self.should_x_be_child_of_y(position, pos_child_1):
-                        if self.should_x_be_child_of_y(pos_child_0, pos_child_1):
-                            self._exchange_values_at(position, pos_child_1)
-                            position = pos_child_1
-                        else:
-                            self._exchange_values_at(position, pos_child_0)
-                            position = pos_child_0
-                    else:
-                        self._exchange_values_at(position, pos_child_0)
-                        position = pos_child_0
-                elif self.should_x_be_child_of_y(position, pos_child_1):
-                    self._exchange_values_at(position, pos_child_1)
-                    position = pos_child_1
-                else:
-                    break
-
-
-
-    def _get_value_at(self, position:int):
-        return self.h[position]
-
-    def _set_value_at(self, position:int, value):
-        self.h[position] = value
-
-
-    def _exchange_values_at(self, position_0, position_1):
-        value_0, value_1 = self._get_value_at(position_0), self._get_value_at(position_1)
-        self._set_value_at(position_0, value_1)
-        self._set_value_at(position_1, value_0)
-
-
-    def print_subtree(self, position=0, offset=0):
-        u, d = get_childs_positions(position)
-        print(" " * offset * 4 + str(self.h[position]))
-        if u < len(self.h):
-            self.print_subtree(u, offset+1)
-        if d < len(self.h):
-            self.print_subtree(d, offset+1)
-
-    def check_is_heap_structure(self, position=0):
-        for child_position in get_childs_positions(position):
-            if child_position < len(self.h):
-                if not self.check_is_heap_structure(child_position):
-                    return False
-                if not self.should_x_be_child_of_y(child_position, position):
-                    return False
-        return True
-
-
 
 
 if __name__ == "__main__":
@@ -139,9 +149,9 @@ if __name__ == "__main__":
     heap = Heap("min_heap")
 
     for i in range(10):
-        heap.insert(np.random.rand())
+        heap.insert(Cell(np.random.rand()))
 
-    heap.h[2] = 0.0
+    heap.h[2] = Cell(0.0)
 
     print("--")
     heap.print_subtree()
