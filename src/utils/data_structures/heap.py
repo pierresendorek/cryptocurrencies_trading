@@ -1,6 +1,4 @@
 import numpy as np
-from numba import njit, jit
-from time import time
 
 from src.utils.data_structures.cell import Cell
 
@@ -13,8 +11,9 @@ class Heap:
         elif heap_type == "max_heap":
             self.should_x_be_child_of_y = lambda x, y: self._get_value_at(x) < self._get_value_at(y)
 
-    def insert(self, x):
+    def insert(self, x:Cell):
         pos_x = len(self.h)
+        x.index_in_heap = pos_x
         self.h.append(x)
         pos_px = get_parent_position(pos_x)
         while (pos_px != -1) and self.should_x_be_child_of_y(pos_px, pos_x):
@@ -22,15 +21,32 @@ class Heap:
             pos_x = pos_px
             pos_px = get_parent_position(pos_x)
 
-    def pop_root(self):
-        last_element = self.h.pop(-1)
-        root = self.h[0]
-        self.h[0] = last_element
-        self.bubble(0)
-        return root
 
+    def pop(self, index):
+        if index < 0 or index >= len(self.h):
+            print("index ", index)
+            raise ValueError
+        if len(self.h) == 0:
+            return None
+        else:
+            if index != len(self.h) - 1:
+                cell = self._get_cell_at(index)
+                self._exchange_cells_at(index, len(self.h) - 1)
+                self.h.pop(len(self.h) - 1)
+                self.bubble(index)
+            else:
+                cell = self._get_cell_at(index)
+                self.h.pop(len(self.h) - 1)
+
+            cell.index_in_heap = -1
+            return cell
 
     def bubble(self, position:int):
+        '''
+        Replacing the cell at the right position
+        :param position:
+        :return:
+        '''
         parent_position = get_parent_position(position)
         # bubble_up if needed
         while (parent_position != -1) and self.should_x_be_child_of_y(parent_position, position):
@@ -48,6 +64,8 @@ class Heap:
                     if self.should_x_be_child_of_y(position, pos_child_0):
                         self._exchange_cells_at(pos_child_0, position)
                         position = pos_child_0
+                    else:
+                        break
 
             else: # pos_child_0 and pos_child_1 are then valid positions in the tree
                 if self.should_x_be_child_of_y(position, pos_child_0):
@@ -70,21 +88,20 @@ class Heap:
 
 
     def _get_value_at(self, position:int):
+        if position < 0 or position >= len(self.h):
+            print("position ", position)
+            raise ValueError
         return self.h[position].get_value()
 
     def _get_cell_at(self, position:int):
         return self.h[position]
 
-    def _set_value_at(self, position:int, value):
-        self.h[position] = value
+    # def _set_value_at(self, position:int, value):
+    #     self.h[position] = value
 
     def _set_cell_at(self, position:int, cell):
         self.h[position] = cell
-
-    def _exchange_values_at(self, position_0, position_1):
-        value_0, value_1 = self._get_value_at(position_0), self._get_value_at(position_1)
-        self._set_value_at(position_0, value_1)
-        self._set_value_at(position_1, value_0)
+        cell.index_in_heap = position
 
     def _exchange_cells_at(self, position_0, position_1):
         cell_0, cell_1 = self._get_cell_at(position_0), self._get_cell_at(position_1)
@@ -109,13 +126,9 @@ class Heap:
         return True
 
 
-
-
 def decompose(position):
     stage = int(np.floor(np.log2(position + 1)))
     rem = position - 2**stage + 1
-    #b = np.binary_repr(rem)
-    #binary_repr = '0' * (stage - len(b)) + b
     binary_repr = np.binary_repr(rem, width=stage)
     return rem, binary_repr, stage
 
@@ -148,27 +161,20 @@ if __name__ == "__main__":
 
     heap = Heap("min_heap")
 
-    for i in range(10):
-        heap.insert(Cell(np.random.rand()))
-
-    heap.h[2] = Cell(0.0)
-
-    print("--")
-    heap.print_subtree()
-    print(heap.check_is_heap_structure())
-
-
-    heap.bubble(2)
+    for j in range(100):
+        print(j)
+        for i in range(10):
+            heap.insert(Cell(np.random.rand()))
+        print(np.array(heap.h))
+        heap.pop(np.random.randint(len(heap.h)))
+        print(heap.check_is_heap_structure())
 
 
-    heap.print_subtree()
-    print(heap.check_is_heap_structure())
-
-
-    cell = heap.pop_root()
-    print("popped root ", cell)
-
-    #print(cell)
-    print("--")
+    #
+    # cell = heap.pop_root()
+    # print("popped root ", cell)
+    #
+    # #print(cell)
+    # print("--")
     heap.print_subtree()
     print(heap.check_is_heap_structure())

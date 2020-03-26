@@ -25,7 +25,7 @@ class TestHeap(unittest.TestCase):
             d.append(Cell(i))
 
         L = []
-        while d.nb_items > 0:
+        while d.nb_items_in_deque > 0:
             L.append(d.pop_first_appended().content)
 
         # then
@@ -41,7 +41,7 @@ class TestHeap(unittest.TestCase):
             d.append(Cell(i))
 
         L = []
-        while d.nb_items > 0:
+        while d.nb_items_in_deque > 0:
             L.append(d.pop_first_appended().content)
 
         self.assertEqual(L, [5, 6, 7, 8, 9])
