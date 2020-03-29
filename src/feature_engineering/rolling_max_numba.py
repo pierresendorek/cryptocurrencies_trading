@@ -38,6 +38,6 @@ if __name__ == "__main__":
     print(time_end - time_start)
 
     import matplotlib.pyplot as plt
-    plt.plot(x)
+    plt.plot(x, linewidth=3)
     plt.plot(r_m)
     plt.show()

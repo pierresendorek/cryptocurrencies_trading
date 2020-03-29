@@ -15,7 +15,7 @@ This project is structured as follows.
 * Make features which reflect the market model closer to reality.
     * *WiP* Build an approximative cumulative histogram from the data.
     * *Done* : Base algorithms on the selling price to decide whether to buy or not.
-    * *WiP* Make the computation of the features recursive, in particular : the market state and the smoothings. 
+    * Analyze what is the exact probabilistic criterion to buy
 
 ## TODO (Data Science)
 

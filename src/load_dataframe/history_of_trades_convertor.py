@@ -10,11 +10,24 @@ import pandas as pd
 class HistoryOfTradesConvertor:
     def __init__(self):
         self.datum_formatter = DatumFormatter()
+        self.save_dir = os.path.join(ConfigProject().subdataframes_path)
+        self.new_dataframe_every = 1000
 
-    def build_dataframe(self):
+    def save_dataframes(self):
+
+        if not os.path.exists(self.save_dir):
+            os.mkdir(self.save_dir)
+
         files = self._load_all_files_as_list()
-        rows = self._format_files(files)
 
+        for i in range(0, len(files), self.new_dataframe_every):
+            df = self.build_dataframe(files[i:i+self.new_dataframe_every])
+            file_name = "df_all_trades_part_" + str(i) + ".pickle.gzip"
+            pickle.dump(df, gzip.open(os.path.join(self.save_dir, file_name), "wb"))
+
+
+    def build_dataframe(self, files):
+        rows = self._format_files(files)
         df = pd.DataFrame(rows)
         df.sort_values(by="time", inplace=True)
         return df
@@ -29,7 +42,7 @@ class HistoryOfTradesConvertor:
                     files.append(os.path.join(r, file))
         return files
 
-    def _format_files(self, files):
+    def _format_files(self, files, max_rows_per_file=1000):
         rows = []
         for filepath in files:
             try:
@@ -47,12 +60,9 @@ class HistoryOfTradesConvertor:
 
 
 if __name__ == "__main__":
-    df = HistoryOfTradesConvertor().build_dataframe()
+    HistoryOfTradesConvertor().save_dataframes()
 
-    save_path = os.path.join(ConfigProject().removable_path, "df_all_trades.pickle.gzip")
-    pickle.dump(df, gzip.open(save_path, "wb"))
 
-    print(df)
 
 
 

@@ -20,6 +20,7 @@ class ConfigProject:
         self.pairs_file = join(self.constants_path, "pairs.txt")
         self.history_of_trades_path = join(self.data_path, "history_of_trades")
         self.removable_path = join(self.data_path, "removable")
+        self.subdataframes_path = join(self.removable_path, "subdataframes")
 
         for d in [self.constants_path, self.history_of_trades_path, self.removable_path]:
             makedirs_if_doesnt_exist(d)
