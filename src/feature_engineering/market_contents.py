@@ -2,11 +2,13 @@ import numpy as np
 from sortedcontainers import SortedDict
 from pprint import pprint
 
+from src.utils.data_structures.heap_deque import HeapDeque
+
+
 class MarketContents:
-    def __init__(self, nb_items_to_keep=10**5):
-        self.current_sells = SortedDict()
-        self.current_buys = SortedDict()
-        self.nb_items_to_keep = nb_items_to_keep
+    def __init__(self, nb_items_to_keep=10**6):
+        self.current_sells = HeapDeque(max_nb_items=nb_items_to_keep, sort_order='ascending')
+        self.current_buys = HeapDeque(max_nb_items=nb_items_to_keep, sort_order='descending')
 
     def update_contents(self, row):
         if row["sell_buy"] == "s":
@@ -14,19 +16,9 @@ class MarketContents:
         if row["sell_buy"] == "b":
             self._add_to_distibution(self.current_buys, row["conversion_rate"], row["amount"])
         self._make_deals()
-        self.random_forget_if_too_much_elements()
 
-    def random_forget_if_too_much_elements(self):
-        for collection in [self.current_buys, self.current_sells]:
-            if len(collection) > self.nb_items_to_keep:
-                nb_elements_to_remove = len(collection) - self.nb_items_to_keep
-                idx_of_elements_to_remove = sorted(np.random.choice(len(collection), size=nb_elements_to_remove, replace=False), reverse=True)
-                for index in idx_of_elements_to_remove:
-                    collection.popitem(index)
-
-    def _add_to_distibution(self, d: dict, key, increment):
-        value = d.get(key, 0)
-        d[key] = value + increment
+    def _add_to_distibution(self, sell_or_buy, conversion_rate, amount):
+        pass
 
     def _make_deals(self):
         all_deals_made = False

@@ -1,7 +1,7 @@
 from src.utils.data_structures.cell import Cell
 from src.utils.data_structures.deque import Deque
 from src.utils.data_structures.heap import Heap
-
+from src.utils.data_structures.item import Item
 
 
 class HeapDeque:
@@ -40,7 +40,8 @@ if __name__ == "__main__":
     hd = HeapDeque(max_nb_items=10, sort_order='ascending')
 
     for i in range(10000):
-        hd.append(Cell(np.random.rand()))
+        value = Item(np.random.rand(), amount=1.0)
+        hd.append(Cell(value))
 
 
 

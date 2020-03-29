@@ -1,6 +1,7 @@
 import numpy as np
 
 from src.utils.data_structures.cell import Cell
+from src.utils.data_structures.item import Item
 
 
 class Heap:
@@ -164,7 +165,8 @@ if __name__ == "__main__":
     for j in range(100):
         print(j)
         for i in range(10):
-            heap.insert(Cell(np.random.rand()))
+            value = Item(conversion_rate=np.random.rand(), amount=1.0)
+            heap.insert(Cell(value))
         print(np.array(heap.h))
         heap.pop(np.random.randint(len(heap.h)))
         print(heap.check_is_heap_structure())

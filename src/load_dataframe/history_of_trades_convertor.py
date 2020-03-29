@@ -13,7 +13,7 @@ class HistoryOfTradesConvertor:
         self.save_dir = os.path.join(ConfigProject().subdataframes_path)
         self.new_dataframe_every = 1000
 
-    def save_dataframes(self):
+    def save_dataframes(self, filter_only_xbt=True):
 
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
@@ -22,7 +22,8 @@ class HistoryOfTradesConvertor:
 
         for i in range(0, len(files), self.new_dataframe_every):
             df = self.build_dataframe(files[i:i+self.new_dataframe_every])
-            file_name = "df_all_trades_part_" + str(i) + ".pickle.gzip"
+            df = df[df['currency_pair'] == 'XBT/EUR']
+            file_name = "df_xbt_trades_part_" + str(i) + ".pickle.gzip"
             pickle.dump(df, gzip.open(os.path.join(self.save_dir, file_name), "wb"))
 
 

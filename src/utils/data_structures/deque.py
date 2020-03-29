@@ -1,6 +1,7 @@
 from typing import Tuple, List
 import numpy as np
 from src.utils.data_structures.cell import Cell
+from src.utils.data_structures.item import Item
 
 
 class Deque:
@@ -87,7 +88,8 @@ if __name__ == "__main__":
     d = Deque(size=5)
 
     for i in range(17):
-        cell = d.append(Cell(i))
+        value = Item(conversion_rate=i, amount=1.0)
+        cell = d.append(Cell(value))
         if cell is not None and not cell.is_dummy():
             print("out_cell ", cell)
 

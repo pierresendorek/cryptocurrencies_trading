@@ -16,6 +16,8 @@ This project is structured as follows.
     * *WiP* Build an approximative cumulative histogram from the data.
     * *Done* : Base algorithms on the selling price to decide whether to buy or not.
     * Analyze what is the exact probabilistic criterion to buy
+    * Re-Run data collection after interruption
+    
 
 ## TODO (Data Science)
 
