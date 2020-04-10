@@ -12,7 +12,7 @@ def my_handler(message):
     # Here you can do stuff with the messages
     global i
     global L
-    L.update(message)
+    L.append(message)
     print(message)
     i += 1
     i = i % 1000
@@ -22,7 +22,6 @@ def my_handler(message):
             pickle.dump(L, f)
         print("Done.")
         L = []
-
 
 
 my_client = client.WssClient()

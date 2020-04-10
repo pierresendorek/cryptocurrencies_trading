@@ -2,6 +2,7 @@ import numpy as np
 from sortedcontainers import SortedDict
 from pprint import pprint
 
+from src.utils.data_structures.cell import Cell
 from src.utils.data_structures.heap_deque import HeapDeque
 
 
@@ -12,9 +13,9 @@ class MarketContents:
 
     def update_contents(self, row):
         if row["sell_buy"] == "s":
-            self._add_to_distibution(self.current_sells, row["conversion_rate"], row["amount"])
+            self.current_sells.append(Cell(conversion_rate=row["conversion_rate"], amount=row["amount"]))
         if row["sell_buy"] == "b":
-            self._add_to_distibution(self.current_buys, row["conversion_rate"], row["amount"])
+            self.current_buys.append(Cell(conversion_rate=row["conversion_rate"], amount=row["amount"]))
         self._make_deals()
 
     def _add_to_distibution(self, sell_or_buy, conversion_rate, amount):
@@ -44,13 +45,15 @@ class MarketContents:
                         self._pop_highest_buy()
 
     def _pop_highest_buy(self):
-        self.current_buys.popitem(-1)
+        cell = self.current_buys.pop_root()
+        return cell.conversion_rate, cell.amount
 
     def _pop_lowest_sell(self):
-        self.current_sells.popitem(0)
+        cell = self.current_sells.pop_root()
+        return cell.conversion_rate, cell.amount
 
     def _take_lowest_sell(self):
-        return self.current_sells.peekitem(0)
+        self.current_sells.heap.get_root()
 
     def _take_highest_buy(self):
-        return self.current_buys.peekitem(-1)
+        self.current_buys.heap.get_root()

@@ -15,7 +15,7 @@ class HeapDeque:
         self.heap = Heap(heap_type)
         self.deque = Deque(max_nb_items)
 
-    def pop_root(self):
+    def pop_root(self) -> Cell:
         cell = self.heap.pop(0)
         self.deque.pop(cell.index_in_deque)
         return cell
@@ -34,6 +34,8 @@ class HeapDeque:
         else:
             return None
 
+    def __len__(self):
+        return self.deque.nb_items_in_deque
 
 if __name__ == "__main__":
     import numpy as np

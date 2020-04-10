@@ -42,6 +42,9 @@ class Heap:
             cell.index_in_heap = -1
             return cell
 
+    def pop_root(self):
+        return self.pop(0)
+
     def bubble(self, position:int):
         '''
         Replacing the cell at the right position
@@ -87,15 +90,17 @@ class Heap:
                     break
 
 
-
     def _get_value_at(self, position:int):
         if position < 0 or position >= len(self.h):
             print("position ", position)
             raise ValueError
         return self.h[position].get_value()
 
-    def _get_cell_at(self, position:int):
+    def _get_cell_at(self, position:int) -> Cell:
         return self.h[position]
+
+    def get_root(self):
+        return self._get_cell_at(position=0)
 
     # def _set_value_at(self, position:int, value):
     #     self.h[position] = value

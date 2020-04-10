@@ -1,9 +1,10 @@
 class Cell:
-    def __init__(self, value=None):
-        if value is None:
+    def __init__(self, conversion_rate=None, amount=None):
+        if conversion_rate is None:
             self.set_dummy()
         else:
-            self.value = value
+            self.conversion_rate = conversion_rate
+            self.amount = amount
         self.reset()
 
     def reset(self):
@@ -14,13 +15,13 @@ class Cell:
 
 
     def get_value(self):
-        return self.value
+        return self.conversion_rate
 
     def set_dummy(self):
-        self.value = None
+        self.conversion_rate = None
 
     def is_dummy(self):
-        if self.value is None:
+        if self.conversion_rate is None:
             return True
         else:
             return False
