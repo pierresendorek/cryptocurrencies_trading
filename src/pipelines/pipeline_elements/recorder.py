@@ -28,5 +28,5 @@ class Recorder:
             self.print("Done.")
             self.rows_of_data = []
         return datum
-        # the datum passes through the pipeline if needed
+        # the datum passes through the pipelines if needed
 

@@ -6,6 +6,11 @@ class DatumFormatter:
     def __init__(self):
         pass
 
+    def __call__(self, datum_iterator):
+        for datum in datum_iterator:
+            if isinstance(datum, list):
+                yield self.extract(datum)
+
     def get_currency_pair(self, datum):
         return datum[3]
 

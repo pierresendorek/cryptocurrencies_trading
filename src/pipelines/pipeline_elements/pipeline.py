@@ -1,13 +1,13 @@
-
+from typing import Iterator
 
 class Pipeline:
     def __init__(self, steps):
         self.steps = steps
 
-    def __call__(self, args):
+    def __call__(self, source_iterator:Iterator) -> Iterator:
         for step in self.steps:
-            args = step(args)
-        return args
+                source_iterator = step(source_iterator)
+        return source_iterator
 
 
 

@@ -13,11 +13,7 @@ class KrakenStream:
     def __init__(self, verbose=False):
         # the way through which the child process communicates with the parent
         self.queue_of_last_dates_and_messages = Queue()
-        self.stream_of_data = self.get_stream_of_data()
         self.verbose = verbose
-
-    def __call__(self, *args, **kwargs):
-        return next(self.stream_of_data)
 
     def get_stream_of_data(self):
         p = Process(target=self._connect_to_client_and_read_data, args=())
@@ -66,7 +62,7 @@ class KrakenStream:
 
 
 if __name__ == "__main__":
-   k = KrakenStream()
-   for datum in k.get_stream_of_data():
+   k = KrakenStream().get_stream_of_data()
+   for datum in k:
        print(datum)
 
