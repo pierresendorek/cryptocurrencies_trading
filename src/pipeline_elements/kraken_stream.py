@@ -9,15 +9,18 @@ from multiprocessing import Queue, Process
 
 
 
-class KrakenStreamRecorder:
-    def __init__(self):
-        self.messages = []
-        self.i = 0
+class KrakenStream:
+    def __init__(self, verbose=False):
+        # the way through which the child process communicates with the parent
         self.queue_of_last_dates_and_messages = Queue()
+        self.stream_of_data = self.get_stream_of_data()
+        self.verbose = verbose
 
+    def __call__(self, *args, **kwargs):
+        return next(self.stream_of_data)
 
-    def record_stream_of_data_robust(self):
-        p = Process(target=self._record_stream_of_data, args=())
+    def get_stream_of_data(self):
+        p = Process(target=self._connect_to_client_and_read_data, args=())
         p.start()
         sleep(5.0)
         last_date = time()
@@ -29,32 +32,25 @@ class KrakenStreamRecorder:
                 sleep(1.0)
 
             if message is not None:
-                self.messages.append(message)
+                yield message
 
-            if time() - last_date > 5.0:
-                print("Restarting process")
+            if time() - last_date > 5.0: # no data for too long
+                self.print("Restarting process")
                 p.kill()
-                p = Process(target=self._record_stream_of_data, args=())
+                p = Process(target=self._connect_to_client_and_read_data, args=())
                 p.start()
 
-            self.i += 1
-            self.i = self.i % 1000
-            if self.i == 0:
-                print("dumping...")
-                with gzip.open(join(ConfigProject().history_of_trades_path,
-                                    "history_extract_" + str(round(time() * 100)) + ".pickle.gzip"), "wb") as f:
-                    pickle.dump(self.messages, f)
-                print("Done.")
-                self.messages = []
+    def print(self, *args):
+        if self.verbose:
+            print(*args)
 
     def _my_handler(self, message):
-        # Here you can do stuff with the messages
-        print(message)
+        self.print(message)
         last_date = time()
         self.queue_of_last_dates_and_messages.put((last_date, message))
 
 
-    def _record_stream_of_data(self):
+    def _connect_to_client_and_read_data(self):
         my_client = client.WssClient()
         pair_list = Constants().supported_pair_list
         my_client.subscribe_public(
@@ -70,5 +66,7 @@ class KrakenStreamRecorder:
 
 
 if __name__ == "__main__":
-   k = KrakenStreamRecorder()
-   k.record_stream_of_data_robust()
+   k = KrakenStream()
+   for datum in k.get_stream_of_data():
+       print(datum)
+
