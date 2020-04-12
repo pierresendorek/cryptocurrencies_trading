@@ -2,6 +2,7 @@ import gzip
 from time import time
 from os.path import join
 import pickle
+from typing import Iterator
 
 from conf import ConfigProject
 
@@ -19,14 +20,14 @@ class Recorder:
         if self.verbose:
             print(*args)
 
-    def __call__(self, datum):
-        self.rows_of_data.append(datum)
-        if len(self.rows_of_data) >= self.save_every:
-            self.print("dumping...")
-            with gzip.open(join(self.folder_to_save, "history_extract_" + str(round(time() * 100)) + ".pickle.gzip"), "wb") as f:
-                pickle.dump(self.rows_of_data, f)
-            self.print("Done.")
-            self.rows_of_data = []
-        return datum
-        # the datum passes through the pipelines if needed
+    def __call__(self, datum_iterator:Iterator):
+        for datum in datum_iterator:
+            self.rows_of_data.append(datum)
+            if len(self.rows_of_data) >= self.save_every:
+                self.print("dumping...")
+                with gzip.open(join(self.folder_to_save, "history_extract_" + str(round(time() * 100)) + ".pickle.gzip"), "wb") as f:
+                    pickle.dump(self.rows_of_data, f)
+                self.print("Done.")
+                self.rows_of_data = []
+
 

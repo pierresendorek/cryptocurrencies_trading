@@ -16,7 +16,7 @@ if mock:
 
 else:
     print("Using Kraken stream")
-    kraken_source = KrakenStream(verbose=False).get_stream_of_data()
+    kraken_source = KrakenStream(verbose=False).get_stream_of_data_as_iterator()
     pipeline = Pipeline(steps=[DatumFormatter(),
                                IterateOverIterable(),
                                TransformToPandasRow()])

@@ -4,10 +4,10 @@ class Pipeline:
     def __init__(self, steps):
         self.steps = steps
 
-    def __call__(self, source_iterator:Iterator) -> Iterator:
+    def __call__(self, arg):
         for step in self.steps:
-                source_iterator = step(source_iterator)
-        return source_iterator
+                arg = step(arg)
+        return arg
 
 
 

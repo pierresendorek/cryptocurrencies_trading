@@ -6,7 +6,7 @@ from src.constants import Constants
 from time import time, sleep
 import gzip
 from multiprocessing import Queue, Process
-
+from typing import Iterator
 
 
 class KrakenStream:
@@ -15,10 +15,10 @@ class KrakenStream:
         self.queue_of_last_dates_and_messages = Queue()
         self.verbose = verbose
 
-    def get_stream_of_data(self):
+    def get_stream_of_data_as_iterator(self) -> Iterator:
         p = Process(target=self._connect_to_client_and_read_data, args=())
         p.start()
-        sleep(5.0)
+        sleep(1.0)
         last_date = time()
         while(True):
             try:
@@ -62,7 +62,7 @@ class KrakenStream:
 
 
 if __name__ == "__main__":
-   k = KrakenStream().get_stream_of_data()
+   k = KrakenStream().get_stream_of_data_as_iterator()
    for datum in k:
        print(datum)
 
