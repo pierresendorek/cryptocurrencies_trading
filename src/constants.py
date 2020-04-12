@@ -9,6 +9,7 @@ class Constants:
         self.supported_pair_list = self.load_supported_pair_list(conf)
         self.equivalences = self.load_equivalences()
 
+    # TODO : get data online instead
     def load_supported_pair_list(self, conf):
         with open(conf.pairs_file, "r") as f:
             pair_list_string = f.read()

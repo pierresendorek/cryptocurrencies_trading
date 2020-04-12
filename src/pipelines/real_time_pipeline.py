@@ -4,7 +4,7 @@ from src.pipelines.pipeline_elements.dataset_stream import DatasetStream
 from src.pipelines.pipeline_elements.iterate_over_iterable import IterateOverIterable
 from src.pipelines.pipeline_elements.kraken_stream import KrakenStream
 from src.pipelines.pipeline_elements.pipeline import Pipeline
-from src.pipelines.pipeline_elements.transform_to_pandas_row import TransformToPandasRow
+from src.pipelines.pipeline_elements.transform_dict_to_pandas_row import TransformDictToPandasRow
 
 mock = True
 
@@ -19,9 +19,8 @@ else:
     kraken_source = KrakenStream(verbose=False).get_stream_of_data_as_iterator()
     pipeline = Pipeline(steps=[DatumFormatter(),
                                IterateOverIterable(),
-                               TransformToPandasRow()])
+                               TransformDictToPandasRow()])
     data_source = pipeline(kraken_source)
-
 
 
 

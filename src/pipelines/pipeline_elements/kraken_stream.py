@@ -47,6 +47,11 @@ class KrakenStream:
 
 
     def _connect_to_client_and_read_data(self):
+        '''
+        See : https://docs.kraken.com/websockets/#message-subscribe
+        :return:
+        '''
+
         my_client = client.WssClient()
         pair_list = Constants().supported_pair_list
         my_client.subscribe_public(

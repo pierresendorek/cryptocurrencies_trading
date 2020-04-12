@@ -50,6 +50,5 @@ class DataLoader:
 
 
 
-
 if __name__ == '__main__':
     print(DataLoader().load().get_uninterrupted_datasets(interruption_delta_time_hours=1))

@@ -1,7 +1,6 @@
 import numpy as np
 
 from src.utils.data_structures.cell import Cell
-from src.utils.data_structures.item import Item
 
 
 class Heap:
@@ -94,12 +93,12 @@ class Heap:
         if position < 0 or position >= len(self.h):
             print("position ", position)
             raise ValueError
-        return self.h[position].get_value()
+        return self.h[position].get_conversion_rate()
 
     def _get_cell_at(self, position:int) -> Cell:
         return self.h[position]
 
-    def get_root(self):
+    def get_root(self) -> Cell:
         return self._get_cell_at(position=0)
 
     # def _set_value_at(self, position:int, value):
@@ -115,6 +114,9 @@ class Heap:
         self._set_cell_at(position_1, cell_0)
 
     def print_subtree(self, position=0, offset=0):
+        if len(self.h) == 0:
+            print("Empty heap")
+            return
         u, d = get_childs_positions(position)
         print(" " * offset * 4 + str(self.h[position]))
         if u < len(self.h):
@@ -167,14 +169,11 @@ if __name__ == "__main__":
 
     heap = Heap("min_heap")
 
-    for j in range(100):
-        print(j)
-        for i in range(10):
-            value = Item(conversion_rate=np.random.rand(), amount=1.0)
-            heap.insert(Cell(value))
-        print(np.array(heap.h))
-        heap.pop(np.random.randint(len(heap.h)))
-        print(heap.check_is_heap_structure())
+    cell = Cell(conversion_rate=float(np.random.rand()), amount=1.0)
+    #heap.insert(cell)
+
+    heap.print_subtree()
+
 
 
     #
@@ -183,5 +182,4 @@ if __name__ == "__main__":
     #
     # #print(cell)
     # print("--")
-    heap.print_subtree()
     print(heap.check_is_heap_structure())

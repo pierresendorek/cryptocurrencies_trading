@@ -14,7 +14,10 @@ class Cell:
         self.index_in_heap = -1
 
 
-    def get_value(self):
+    def get_values(self):
+        return self.conversion_rate, self.amount
+
+    def get_conversion_rate(self):
         return self.conversion_rate
 
     def set_dummy(self):

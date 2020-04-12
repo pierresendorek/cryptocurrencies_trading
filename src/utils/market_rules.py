@@ -9,6 +9,7 @@ class MarketRules:
 
     def __init__(self):
         # TODO : find the actual values (should be smaller)
+        # TODO : get those values from the server
         # the following fees are valid for $0 - $50,000 transactions :
         self.taker_fees_proportion_buy = 0.26 / 100
         self.taker_fees_proportion_sell = 0.26 / 100
