@@ -1,6 +1,6 @@
 from typing import Iterator
 
-class Pipeline:
+class OrdinaryPipeline:
     def __init__(self, steps):
         self.steps = steps
 
@@ -13,7 +13,7 @@ class Pipeline:
 
 
 if __name__ == "__main__":
-    p = Pipeline(steps=[lambda x:x+1, lambda x: x*x])
+    p = OrdinaryPipeline(steps=[lambda x: x + 1, lambda x: x * x])
     print(p(3))
     # 16
 

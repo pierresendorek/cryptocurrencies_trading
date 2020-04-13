@@ -6,7 +6,7 @@ from src.feature_engineering.datum_formatter import DatumFormatter
 from src.pipelines.pipeline_elements.filter import Filter
 from src.pipelines.pipeline_elements.iterate_over_iterable import IterateOverIterable
 from src.pipelines.pipeline_elements.kraken_stream import KrakenStream
-from src.pipelines.pipeline_elements.pipeline import Pipeline
+from src.pipelines.pipeline_elements.ordinary_pipeline import OrdinaryPipeline
 from src.pipelines.pipeline_elements.lambda_function import Lambda
 from src.pipelines.pipeline_elements.transform_dict_to_pandas_row import TransformDictToPandasRow
 from src.utils.data_structures.cell import Cell
@@ -70,10 +70,10 @@ if __name__ == "__main__":
     market_contents = MarketContents()
 
     kraken_source = KrakenStream(verbose=False).get_stream_of_data_as_iterator()
-    pipeline = Pipeline(steps=[DatumFormatter(),
-                               IterateOverIterable(),
-                               Filter(lambda d: d['currency_pair'] == 'XBT/EUR'),
-                               TransformDictToPandasRow()])
+    pipeline = OrdinaryPipeline(steps=[DatumFormatter(),
+                                       IterateOverIterable(),
+                                       Filter(lambda d: d['currency_pair'] == 'XBT/EUR'),
+                                       TransformDictToPandasRow()])
     data_source = pipeline(kraken_source)
 
     for i, row in enumerate(data_source):

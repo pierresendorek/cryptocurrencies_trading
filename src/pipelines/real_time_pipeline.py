@@ -4,10 +4,10 @@ from src.pipelines.feature_engineering_pipeline import FeatureEngineeringPipelin
 from src.pipelines.pipeline_elements.dataset_stream import DatasetStream
 from src.pipelines.pipeline_elements.iterate_over_iterable import IterateOverIterable
 from src.pipelines.pipeline_elements.kraken_stream import KrakenStream
-from src.pipelines.pipeline_elements.pipeline import Pipeline
+from src.pipelines.pipeline_elements.ordinary_pipeline import OrdinaryPipeline
 from src.pipelines.pipeline_elements.transform_dict_to_pandas_row import TransformDictToPandasRow
 
-mock = True
+mock = False
 
 feature_engineering_pipeline = FeatureEngineeringPipeline()
 
@@ -23,11 +23,11 @@ if mock:
 else:
     print("Using Kraken stream")
     kraken_source = KrakenStream(verbose=False).get_stream_of_data_as_iterator()
-    pipeline = Pipeline(steps=[DatumFormatter(),
-                               IterateOverIterable(),
-                               TransformDictToPandasRow(),
-                               feature_engineering_pipeline])
+    pipeline = OrdinaryPipeline(steps=[DatumFormatter(),
+                                       IterateOverIterable(),
+                                       TransformDictToPandasRow()])
     data_source = pipeline(kraken_source)
+    data_source = feature_engineering_pipeline(data_source)
 
 
 from time import sleep

@@ -16,11 +16,13 @@ class FeatureEngineeringPipeline(PipelineElement):
         PipelineElement.__init__(self)
         if steps is None:
             self.steps = [Filter(lambda row: row['currency_pair'] == 'XBT/EUR'),
+                          AddTimeFeatures(),
                           AddTimeDifference(),
-                          Smooth(nb_smoothers=20),
                           AddModulo(100),
                           AddModulo(1000),
-                          AddDifferencesWithConversionRate()]
+                          Smooth(nb_smoothers=20),
+                          #AddDifferencesWithConversionRate()
+                          ]
         else:
             self.steps = steps
 
@@ -78,10 +80,10 @@ class Smooth(PipelineElement):
                 t0 = row['time']
             y = self.smoother.smooth_array(np.array([row['conversion_rate']], dtype=np.float32),
                                        np.array([row['time_difference'].total_seconds()], dtype=np.float32))
-            if row['time'] - t0 > timedelta(seconds=self.nb_seconds_max):
-                for i in range(len(y)):
-                    row[SMOOTH_COL_PREFIX + str(i)] = y[i]
-                    yield row
+            if True or row['time'] - t0 > timedelta(seconds=self.nb_seconds_max):
+                for i in range(len(y[0])):
+                    row[SMOOTH_COL_PREFIX + str(i)] = y[0][i]
+                yield row
             else:
                 pass # way to remove burn in data
 
@@ -134,6 +136,29 @@ class AddDifferencesWithConversionRate:
             df['diff_' + column_name] = df["conversion_rate"] - df[column_name]
         return df
 
+
+class AddTimeFeatures(PipelineElement):
+    def __init__(self):
+        self.functions = {
+            "time_feature_hour_cos": lambda time: np.cos(2 * np.pi * time.hour / 24),
+            "time_feature_hour_sin": lambda time: np.sin(2 * np.pi * time.hour / 24),
+            "time_feature_minute_cos": lambda time: np.cos(2 * np.pi * time.minute / 60),
+            "time_feature_minute_sin" : lambda time: np.sin(2 * np.pi * time.minute / 60),
+            "time_feature_weekday_cos" : lambda time: np.cos(2 * np.pi * time.isoweekday() / 7),
+            "time_feature_weekday_sin" : lambda time: np.sin(2 * np.pi * time.isoweekday() / 7)
+        }
+
+    def __call__(self, iterator:Iterator[pd.Series]):
+        for row in iterator:
+            time = row['time']
+            for feature_name, function in self.functions.items():
+                row[feature_name] = function(time)
+            yield row
+
+    def transform_dataframe(self, df:pd.DataFrame):
+        for feature_name, function in self.functions.items():
+            df[feature_name] = df['time'].map(function)
+        return df
 
 if __name__ == "__main__":
 
