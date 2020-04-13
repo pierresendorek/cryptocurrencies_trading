@@ -6,7 +6,7 @@ from numba.typed import List
 
 
 @jit
-def rolling_max(x:np.ndarray, pos:np.ndarray, win_len:float):
+def anticausal_rolling_max(x:np.ndarray, pos:np.ndarray, win_len:float):
     # is already anticausal
     r_m = np.zeros_like(x)
     position_value_list = List()
@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     from time import time
     time_start = time()
-    r_m = rolling_max(x, pos, 100.0)
+    r_m = anticausal_rolling_max(x, pos, 100.0)
     time_end = time()
     print(time_end - time_start)
 
