@@ -21,7 +21,7 @@ class FeatureEngineeringPipeline(PipelineElement):
                           AddModulo(100),
                           AddModulo(1000),
                           Smooth(nb_smoothers=20),
-                          #AddDifferencesWithConversionRate()
+                          AddDifferencesSmoothWithConversionRate()
                           ]
         else:
             self.steps = steps
@@ -117,13 +117,13 @@ class AddModulo:
         return df
 
 
-class AddDifferencesWithConversionRate:
+class AddDifferencesSmoothWithConversionRate:
 
     def __call__(self, iterator:Iterator[pd.Series]):
         column_names = []
         for row in iterator:
             if column_names == []:
-                column_names = [column for column in row.columns if column[:len(SMOOTH_COL_PREFIX)] == SMOOTH_COL_PREFIX]
+                column_names = [column for column in row.index if column[:len(SMOOTH_COL_PREFIX)] == SMOOTH_COL_PREFIX]
 
             for column_name in column_names:
                 row['diff_' + column_name] = row['conversion_rate'] - row[column_name]
