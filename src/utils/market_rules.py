@@ -19,6 +19,13 @@ class MarketRules:
         sell_price = self.how_much_eur_do_i_really_get_when_i_sell(1.0, conversion_rate_sell)
         return (sell_price - buy_price) / buy_price
 
+    def how_much_xbt_do_i_really_get_for(self, nb_eur_total, conversion_rate):
+        # nb_eur ( 1 + fee ) = nb_eur_total
+        nb_eur = nb_eur_total / (1.0 + self.taker_fees_proportion_buy)
+        nb_xbt = nb_eur / conversion_rate
+        return nb_xbt
+
+
     def how_much_eur_costs_buying(self, nb_xbt, conversion_rate_buy):
         nb_eur = conversion_rate_buy * nb_xbt
         fee = nb_eur * self.taker_fees_proportion_buy
@@ -39,4 +46,3 @@ class MarketRules:
 if __name__ == "__main__":
 
     market_rules = MarketRules()
-    nb_eur = market_rules.get_minimal_amount_of_eur(conversion_rate_1xbt_to_eur=7000)

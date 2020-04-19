@@ -109,11 +109,13 @@ class AddModulo:
 
     def __call__(self, iterator:Iterator[pd.Series]):
         for row in iterator:
-            row['modulo_' + str(self.modulo)] = row['conversion_rate'] % self.modulo
+            row['modulo_' + str(self.modulo) + "_cos"] = np.cos(2 * np.pi * (row['conversion_rate'] % self.modulo) / self.modulo)
+            row['modulo_' + str(self.modulo) + "_sin"] = np.sin(2 * np.pi * (row['conversion_rate'] % self.modulo) / self.modulo)
             yield row
 
     def transform_dataframe(self, df):
-        df['modulo_' + str(self.modulo)] = df['conversion_rate'] % self.modulo
+        df['modulo_' + str(self.modulo) + "_cos"] = np.cos(2 * np.pi * (df['conversion_rate'] % self.modulo) / self.modulo)
+        df['modulo_' + str(self.modulo) + "_sin"] = np.sin(2 * np.pi * (df['conversion_rate'] % self.modulo) / self.modulo)
         return df
 
 

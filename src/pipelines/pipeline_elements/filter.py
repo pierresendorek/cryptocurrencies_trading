@@ -2,9 +2,9 @@ from src.pipelines.pipeline_elements.pipeline_element import PipelineElement
 import pandas as pd
 
 class Filter(PipelineElement):
-    def __init__(self, boolean_function):
+    def __init__(self, boolean_function_keep_if):
         PipelineElement.__init__(self)
-        self.func = boolean_function
+        self.func = boolean_function_keep_if
 
     def __call__(self, iterator:pd.Series):
         for x in iterator:

@@ -7,12 +7,12 @@ from src.utils.market_rules import MarketRules
 
 
 class TargetEngineeringPipeline:
-    def __init__(self, steps=None):
+    def __init__(self, window_len=6*60*60, steps=None):
         if steps is None:
-            self.steps = [AnticausalRollingMax(window_len=6*60*60),
+            self.steps = [AnticausalRollingMax(window_len=window_len),
                           ComputeGainFactor()]
 
-    def __call__(self, df):
+    def transform_dataframe(self, df):
         for step in self.steps:
             df = step(df)
         return df
