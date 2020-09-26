@@ -44,3 +44,4 @@ class Wallet:
         return (  self.strf(self.my_nb_eur) + " + "
                 + self.strf(self.market_rules.how_much_eur_do_i_really_get_when_i_sell(self.my_nb_xbt, conversion_rate)) + " = "
                 + self.strf(self.how_much_do_i_possess_now(conversion_rate)))
+

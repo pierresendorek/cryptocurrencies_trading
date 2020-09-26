@@ -2,13 +2,15 @@ from src.feature_engineering.exponential_smoothing_numba import ExponentialSmoot
 from src.load_dataframe.data_loader import DataLoader
 import numpy as np
 import pandas as pd
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Iterator, List
+import time
 
 from src.pipelines.pipeline_elements.filter import Filter
 from src.pipelines.pipeline_elements.pipeline_element import PipelineElement
 
 SMOOTH_COL_PREFIX = 'smooth_'
+SMOOTH_COL_SIGMA2_PREFIX = 'smooth_sigma2_'
 
 
 class FeatureEngineeringPipeline(PipelineElement):
@@ -16,12 +18,13 @@ class FeatureEngineeringPipeline(PipelineElement):
         PipelineElement.__init__(self)
         if steps is None:
             self.steps = [Filter(lambda row: row['currency_pair'] == 'XBT/EUR'),
-                          AddTimeFeatures(),
+                          AddTimeAsFloat(),
+                          #AddTimeFeatures(),
                           AddTimeDifference(),
-                          AddModulo(100),
-                          AddModulo(1000),
-                          Smooth(nb_smoothers=20),
-                          AddDifferencesSmoothWithConversionRate()
+                          #AddModulo(100),
+                          #AddModulo(1000),
+                          Smooth(nb_smoothers=2, nb_seconds_min=60 * 10, nb_seconds_max=60 * 60 * 24 * 30),
+                          #AddDifferencesSmoothWithConversionRate()
                           ]
         else:
             self.steps = steps
@@ -36,6 +39,21 @@ class FeatureEngineeringPipeline(PipelineElement):
             df = step.transform_dataframe(df)
         return df
 
+
+class AddTimeAsFloat(PipelineElement):
+    def __call__(self, iterator:Iterator[pd.Series]):
+        PipelineElement.__init__(self)
+        for row in iterator:
+            row['time_as_float'] = self.convert_pandas_timestamp_to_float(row['time'])
+            yield row
+
+    def transform_dataframe(self, df:pd.DataFrame):
+        df['time_as_float'] = df['time'].map(self.convert_pandas_timestamp_to_float)
+        return df
+
+    def convert_pandas_timestamp_to_float(self, time:datetime):
+        return time.timestamp()
+        #return time.to_pydatetime().timestamp() # seconds
 
 
 class AddTimeDifference(PipelineElement):
@@ -79,7 +97,7 @@ class Smooth(PipelineElement):
             if t0 is None:
                 t0 = row['time']
             y = self.smoother.smooth_array(np.array([row['conversion_rate']], dtype=np.float32),
-                                       np.array([row['time_difference'].total_seconds()], dtype=np.float32))
+                                           np.array([row['time_difference'].total_seconds()], dtype=np.float32))
             if True or row['time'] - t0 > timedelta(seconds=self.nb_seconds_max):
                 for i in range(len(y[0])):
                     row[SMOOTH_COL_PREFIX + str(i)] = y[0][i]

@@ -12,6 +12,11 @@ class DataLoader:
         self.subdataframe_dir = ConfigProject().subdataframes_path
 
     def load(self):
+        #self.load_from_pickle()
+        self.full_dataset = pd.read_pickle("/home/pierresendorek/projets/_data_/crypto/removable/btc_eur_approx_10.pickle")
+        return self
+
+    def load_from_pickle(self):
         dataframes = []
         for file in os.listdir(self.subdataframe_dir):
             if re.match(r'\w*\.pickle\.gzip', file):
@@ -21,6 +26,7 @@ class DataLoader:
             self.full_dataset.sort_values(by='time', inplace=True)
             self.full_dataset.reset_index(inplace=True, drop=True)
         return self
+
 
     def get_uninterrupted_datasets(self, interruption_delta_time_hours=1):
         self.full_dataset['time_next'] = self.full_dataset[['time']].shift(-1)['time']
@@ -52,3 +58,4 @@ class DataLoader:
 
 if __name__ == '__main__':
     print(DataLoader().load().get_uninterrupted_datasets(interruption_delta_time_hours=1))
+    print(len(DataLoader().load().get_uninterrupted_datasets(interruption_delta_time_hours=1)))
