@@ -4,9 +4,9 @@ On dispose d'une suite $(t_i, y_i)_{i\in \mathbb{Z}}.$
 
 On veut fitter une fonction linéaire $F(t) = at + b = y$ telle que, pour un $K$ fixé, on atteigne le minimum de
 
-$$l = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (F(t_i - t_K) - y_i)^2 $$
+$$l = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (F(t_i - t_K) - y_i)^2$$
 
-$$l(a,b) = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (a (t_i - t_K) + b - y_i)^2 $$
+$$l(a,b) = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (a (t_i - t_K) + b - y_i)^2$$
 
 De plus on voudra faire en sorte que les coefficients $a$ et $b$ optimaux soient mis à jour pour chaque $K$ juste grâce au dernier échantillon $(t_K, y_K)$. On calculera les formules qui permettent de mettre à jour ces coefficients de manière récursive.
 
@@ -33,7 +33,7 @@ $$b = \hat{b}(a) = \frac{\sum_{i \leq K} e^{\gamma (t_i - t_{K})} (y_i - a (t_i 
 
 En réinjectant dans l'expression de $l(a,b)$ on obtient
 
-$$l(a,\hat{b}(a)) = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (a (t_i - t_K) + \hat{b}(a) - y_i)^2 $$
+$$l(a,\hat{b}(a)) = \sum_{i \leq K} e^{\gamma (t_i - t_{K})} (a (t_i - t_K) + \hat{b}(a) - y_i)^2$$
 
 En dérivant l'expression ci-dessus par rapport à $a$ et en égalant à zéro
 
@@ -80,7 +80,7 @@ $$=\sum_{j \leq K} e^{\gamma (t_j - t_{K})}  \Big((t_j - t_K)^2 - \bar{T}_{K}^2 
 
 Car
 
-$$\sum_{j \leq K} e^{\gamma (t_j - t_{K})}  \bar{T}_{K} (t_j - t_K)  = \bar{T}_{K}^2 \sum_{j \leq K} e^{\gamma (t_j - t_{K})}  $$
+$$\sum_{j \leq K} e^{\gamma (t_j - t_{K})}  \bar{T}_{K} (t_j - t_K)  = \bar{T}_{K}^2 \sum_{j \leq K} e^{\gamma (t_j - t_{K})}$$
 
 Pour le numérateur on a
 
@@ -95,7 +95,7 @@ $$\sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big((t_i - t_K) y_i - \bar{T}_{K} y
 ## Weights
 
 $$W(K + 1) = \sum_{i \leq K + 1} e^{\gamma (t_i - t_{K + 1})} = e^{\gamma(t_{K} - t_{K + 1})}\sum_{i \leq K + 1} e^{\gamma (t_i - t_{K}) }$$
-$$= 1 + e^{\gamma(t_{K} - t_{K + 1})} \sum_{i \leq K } e^{\gamma (t_i - t_{K}) } $$
+$$= 1 + e^{\gamma(t_{K} - t_{K + 1})} \sum_{i \leq K } e^{\gamma (t_i - t_{K}) }$$
 $$= 1 + e^{\gamma(t_{K} - t_{K + 1})}  W(K)$$
 
 ## Time differences
