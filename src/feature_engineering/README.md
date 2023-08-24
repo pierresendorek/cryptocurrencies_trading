@@ -49,12 +49,12 @@ $$\frac{\partial \hat{b}}{\partial a} = - \frac{\sum_{i \leq K} e^{\gamma (t_i -
 
 Il faut donc
 
-$$a \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K + \frac{\partial \hat{b}}{\partial a}\Big) \Bigg(t_i - t_K - \frac{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}   (t_j - t_K) }{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}} \Bigg)$$ 
-$$ = \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K + \frac{\partial \hat{b}}{\partial a}\Big) \Bigg( y_i - \frac{\sum_{j \leq K} e^{\gamma (t_j - t_{K})} y_j }{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}} \Bigg)$$
+$$a \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K + \frac{\partial \hat{b}}{\partial a}\Big) \Bigg(t_i - t_K - \frac{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}   (t_j - t_K) }{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}} \Bigg)$$
+$$= \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K + \frac{\partial \hat{b}}{\partial a}\Big) \Bigg( y_i - \frac{\sum_{j \leq K} e^{\gamma (t_j - t_{K})} y_j }{\sum_{j \leq K} e^{\gamma (t_j - t_{K})}} \Bigg)$$
 
 C'est à dire
 
-$$ a \sum_{i \leq K} e^{\gamma (t_i  - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big)^2  = \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big) \Big( y_i - \bar{Y}_{K} \Big)$$
+$$a \sum_{i \leq K} e^{\gamma (t_i  - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big)^2  = \sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big) \Big( y_i - \bar{Y}_{K} \Big)$$
 
 avec
 
@@ -63,7 +63,7 @@ $$\bar{Y}_{K}  = \frac{\sum_{j \leq K} e^{\gamma (t_j - t_{K})} y_j }{\sum_{j \l
 
 Enfin :
 
-$$ a = \hat{a} = \frac{\sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big) \Big( y_i - \bar{Y}_{K} \Big)}{\sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big)^2 }$$
+$$a = \hat{a} = \frac{\sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big) \Big( y_i - \bar{Y}_{K} \Big)}{\sum_{i \leq K} e^{\gamma (t_i - t_{K})}  \Big(t_i - t_K - \bar{T}_{K}\Big)^2 }$$
 
 En réinjectant et en simplifiant l'expression :
 
