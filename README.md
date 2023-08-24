@@ -1,5 +1,9 @@
 # Cryptocurrencies trading
 
+This is a project that I did for myself in 2020. 
+I am showing you this project to demonstrate my capability of working on a big project by myself. 
+However, the code quality is far from good. I invite you to have a look at another project[person_detection](https://github.com/pierresendorek/person_detection) which has a better code quality.
+
 ## Structure of the project
 This project is structured as follows. 
 * `notebooks` contains [Jupyter Notebooks](https://jupyter.org/). Those are useful to explore the data efficiently.
